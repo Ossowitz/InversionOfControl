@@ -100,17 +100,20 @@ class MusicPlayer {
 
 # Bean
 
-• Это просто Java-объект. <br/>
+• Это просто Java-объект, который создаётся и управляется Spring Container. <br/>
 • Когда Java-объекты создаются с помощью Spring'а, они называются бинами (beans). <br/>
 • Бины создаются из Java-классов (так же, как и обычные объекты).
 
 ```xml
 
-<bean>id="testBean"
+<bean> id="testBean"
     class="us.ossowitz.springcourse.TestBean">
     <constructor-arg value="Ilya"/>
 </bean>
 ```
+
+• id - идентификатор бина <br/>
+• class - полное имя класса
 
 # Проблема #3:
 
