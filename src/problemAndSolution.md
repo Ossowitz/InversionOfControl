@@ -29,7 +29,7 @@ class MusicPlayer {
 }
 ```
 
-# Решение:
+## Решение:
 
 Использовать интерфейс (или абстрактный класс),
 который бы обобщал различные музыкальные жанры.
@@ -60,7 +60,7 @@ class MusicPlayer {
 }
 ```
 
-# Проблема #2:
+## Проблема #2:
 
 ### Слабая зависимость:
 
@@ -93,12 +93,12 @@ class MusicPlayer {
 }
 ```
 
-# Решение:
+## Решение:
 
 Использовать Spring Framework, который сам создаст необходимые объекты (бины)
 согласно конфигурационному файлу.
 
-# Bean
+## Bean
 
 • Это просто Java-объект, который создаётся и управляется Spring Container. <br/>
 • Когда Java-объекты создаются с помощью Spring'а, они называются бинами (beans). <br/>
@@ -106,7 +106,7 @@ class MusicPlayer {
 
 ```xml
 
-<bean> id="testBean"
+<bean>id="testBean"
     class="us.ossowitz.springcourse.TestBean">
     <constructor-arg value="Ilya"/>
 </bean>
@@ -115,7 +115,7 @@ class MusicPlayer {
 • id - идентификатор бина <br/>
 • class - полное имя класса
 
-# Проблема #3:
+## Проблема #3:
 
 MusicPlayer сам создаёт свои зависимости. Это архитектурно неправильно - противоречит принципу IoC.
 
@@ -145,7 +145,7 @@ class MusicPlayer {
 }
 ```
 
-# Решение:
+## Решение:
 
 Использовать принцип IoC.
 
@@ -184,19 +184,20 @@ MusicPlayer - это и называется инверсией управлен
 
 ### Инверсия управления - это такой архитектурный подход, когда сущность не сама создаёт свои зависимости, а когда этой сущности зависимости поставляются извне.
 
-# Последняя проблема
+## Последняя проблема
+
 ```java
 class MusicPlayer {
     private Music music;
-    
+
     // Зависимость внедряется извне (IoC)
     public MusicPlayer(Music music) {
         this.music = music;
     }
-    
+
     public void playMusic() {
         // Больше не создаём объекты!
-        
+
         // ... Код для воспроизведения музыки
     }
 }
@@ -216,8 +217,37 @@ class UseMusicPlayer {
 Этой задачей тоже занимается Spring Framework.
 
 ## Spring можно конфигурировать с помощью:
+
 • XML-файла конфигураций (старый способ, но многие существующие приложения
 до сих пор его используют). <br/>
 • Java-аннотаций и немного XML (современный способ). <br/>
 • Вся конфигурация на Java-коде (современный).
+
+## Способы внедрения зависимостей
+
+• Через конструктор. <br/>
+• Через setter. <br/>
+• Есть множество конфигураций того, как внедрять (scope, factory method и т.д.). <br/>
+• Можно внедрять через XML, аннотации или Java-код. <br/>
+• Процесс внедрения можно автоматизировать (Autowiring).
+
+### Внедрение (Injection) с помощью конструктора
+
+```xml
+
+<bean id="musicBean"
+      class="us.ossowitz.springcourse.ClassicalMusic">
+</bean>
+
+<bean id="musicPlayer"
+      class="us.ossowitz.springcourse.MusicPlayer">
+<constructor-arg ref="musicBean"/>
+</bean>
+```
+### Использование
+
+```java
+MusicPlayer musicPlayer = context.getBean("musicPlayer", MusicPlayer.class);
+musicPlayer.playMusic();
+```
 
