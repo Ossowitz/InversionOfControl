@@ -251,3 +251,63 @@ MusicPlayer musicPlayer = context.getBean("musicPlayer", MusicPlayer.class);
 musicPlayer.playMusic();
 ```
 
+### Внедрение зависимостей через setter
+
+```java
+public void setMusic(Music music) {
+    this.music = music;    
+}
+```
+```xml
+
+<bean id="musicPlayer"
+      class="us.ossowitz.springcourse.MusicPlayer">
+    <property name="music" ref="musicBean"/>
+</bean>
+```
+
+### Внедрение простых значений
+
+```java
+private String name;
+private int volume;
+
+public void setName(String name) {
+    this.name = name;
+}
+
+public void setVolume(int volume) {
+    this.volume = volume;    
+}
+```
+```xml
+
+<property name="name" value="Some name"/>
+<property name="volume" value="50"/>
+```
+
+### Внедрение простых значений из внешнего файла
+• Не хотим каждый раз лезть в applicationContext.xml <br/>
+• Хотим все простые значения указать в одном файле
+
+1. Создаём файл, расширения .properties <br/>
+Содержимое: <br/>
+```text
+musicPlayer.name=Some name
+musicPlayer.volume=70
+```
+
+2. В applicationContext.xml подтягиваем путь до файла musicPlayer.properties: <br/>
+```xml
+<context:property-placeholder location="classpath:musicPlayer.properties"/>
+```
+
+3. Внедряем зависимости: <br/>
+```xml
+<property name="name" value="${musicPlayer.name}"/>
+<property name="volume" value="${musicPlayer.volume}"/>
+```
+
+## Scope
+**Scope задаёт то, как Spring будет создавать ваши бины**
+
