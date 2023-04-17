@@ -105,7 +105,6 @@ class MusicPlayer {
 • Бины создаются из Java-классов (так же, как и обычные объекты).
 
 ```xml
-
 <bean>id="testBean"
     class="us.ossowitz.springcourse.TestBean">
     <constructor-arg value="Ilya"/>
@@ -234,7 +233,6 @@ class UseMusicPlayer {
 ### Внедрение (Injection) с помощью конструктора
 
 ```xml
-
 <bean id="musicBean"
       class="us.ossowitz.springcourse.ClassicalMusic">
 </bean>
@@ -249,7 +247,7 @@ class UseMusicPlayer {
 
 ```java
 MusicPlayer musicPlayer=context.getBean("musicPlayer",MusicPlayer.class);
-        musicPlayer.playMusic();
+musicPlayer.playMusic();
 ```
 
 ### Внедрение зависимостей через setter
@@ -257,11 +255,10 @@ MusicPlayer musicPlayer=context.getBean("musicPlayer",MusicPlayer.class);
 ```java
 public void setMusic(Music music){
         this.music=music;
-        }
+}
 ```
 
 ```xml
-
 <bean id="musicPlayer"
       class="us.ossowitz.springcourse.MusicPlayer">
     <property name="music" ref="musicBean"/>
@@ -276,15 +273,14 @@ private int volume;
 
 public void setName(String name){
         this.name=name;
-        }
+}
 
 public void setVolume(int volume){
         this.volume=volume;
-        }
+}
 ```
 
 ```xml
-
 <property name="name" value="Some name"/>
 <property name="volume" value="50"/>
 ```
@@ -305,14 +301,12 @@ musicPlayer.volume=70
 2. В applicationContext.xml подтягиваем путь до файла musicPlayer.properties: <br/>
 
 ```xml
-
 <context:property-placeholder location="classpath:musicPlayer.properties"/>
 ```
 
 3. Внедряем зависимости: <br/>
 
 ```xml
-
 <property name="name" value="${musicPlayer.name}"/>
 <property name="volume" value="${musicPlayer.volume}"/>
 ```
@@ -349,16 +343,68 @@ musicPlayer.volume=70
 
 ## Жизненный цикл бина (Bean lifecycle)
 
-![img.png](img.png)
+![img.png](photo/img.png)
 
 ### init-method & destroy-method
 
-#### init-method
+### init-method
 • Метод, который запускается в ходе инициализации бина. <br/>
 • Инициализация ресурсов, обращение к внешним файлам, запуск БД.
 
-#### destroy-method
+### destroy-method
 • Метод, который запускается в ходе уничтожения бина (при 
 завершении работы приложения). <br/>
 • Очищение ресурсов, закрытие потоков ввода-вывода,
 закрытие доступа к БД.
+
+### В коде:
+
+```xml
+<bean id="musicBean"
+      class="us.ossowitz.springcourse.ClassicalMusic"
+      init-method="doMyInit"
+      destroy-method="doMyDestroy">
+</bean>
+```
+
+Методы doMyInit() и doMyDestroy() создаются в классе бина (ClassicalMusic).
+
+```java
+public void doMyInit() {
+        System.out.println("Do my initialization");
+}
+
+public void doMyDestroy() {
+        System.out.println("Do my destruction");
+}
+```
+
+### Тонкости работы с init и destroy методов:
+
+• **Модификатор доступа** <br/>
+У этих методов может быть любой модификатор доступа (public, protected, private). <br/>
+
+• **Тип возвращаемого значения** <br/>
+Может быть любой, но чаще всего используется void (так как нет возможности
+получить возвращаемое значение). <br/>
+
+• **Название метода** <br/>
+Название может быть любым.<br/>
+
+• **Аргументы метода** <br/>
+Эти методы не должны принимать на вход какие-либо аргументы.
+
+### Ещё одна тонкость
+Для бинов со scope «prototype» Spring **не вызывает метод destroy-метод**. <br/>
+Spring не берёт на себя полный жизненный цикл бинов со scope "prototype".
+Spring отдаёт prototype бины клиенту и больше о них не заботится (в отличие
+от singleton бинов).
+
+### factory-method
+[**Фабричный метод - это паттерн программирования**](https://github.com/Ossowitz/Patterns/tree/master/src/FactoryMethod)
+
+**Вкратце:** паттерн "фабричный метод" предлагает создавать объекты не напрямую, используя оператор new, а через
+вызов особого **фабричного метода**. Объекты всё равно будут создаваться при помощи **new**, но делать это будет
+фабричный метод.
+
+Если объекты класса создаются фабричным методом, то можно определить factory-method.
