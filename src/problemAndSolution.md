@@ -244,20 +244,22 @@ class UseMusicPlayer {
 <constructor-arg ref="musicBean"/>
 </bean>
 ```
+
 ### Использование
 
 ```java
-MusicPlayer musicPlayer = context.getBean("musicPlayer", MusicPlayer.class);
-musicPlayer.playMusic();
+MusicPlayer musicPlayer=context.getBean("musicPlayer",MusicPlayer.class);
+        musicPlayer.playMusic();
 ```
 
 ### Внедрение зависимостей через setter
 
 ```java
-public void setMusic(Music music) {
-    this.music = music;    
-}
+public void setMusic(Music music){
+        this.music=music;
+        }
 ```
+
 ```xml
 
 <bean id="musicPlayer"
@@ -272,14 +274,15 @@ public void setMusic(Music music) {
 private String name;
 private int volume;
 
-public void setName(String name) {
-    this.name = name;
-}
+public void setName(String name){
+        this.name=name;
+        }
 
-public void setVolume(int volume) {
-    this.volume = volume;    
-}
+public void setVolume(int volume){
+        this.volume=volume;
+        }
 ```
+
 ```xml
 
 <property name="name" value="Some name"/>
@@ -287,27 +290,75 @@ public void setVolume(int volume) {
 ```
 
 ### Внедрение простых значений из внешнего файла
+
 • Не хотим каждый раз лезть в applicationContext.xml <br/>
-• Хотим все простые значения указать в одном файле
+• Хотим все простые значения указать в одном файле.
 
 1. Создаём файл, расширения .properties <br/>
-Содержимое: <br/>
+   Содержимое: <br/>
+
 ```text
 musicPlayer.name=Some name
 musicPlayer.volume=70
 ```
 
 2. В applicationContext.xml подтягиваем путь до файла musicPlayer.properties: <br/>
+
 ```xml
+
 <context:property-placeholder location="classpath:musicPlayer.properties"/>
 ```
 
 3. Внедряем зависимости: <br/>
+
 ```xml
+
 <property name="name" value="${musicPlayer.name}"/>
 <property name="volume" value="${musicPlayer.volume}"/>
 ```
 
 ## Scope
-**Scope задаёт то, как Spring будет создавать ваши бины**
 
+**Scope задаёт то, как Spring будет создавать ваши бины. <br/>
+Определяет жизненный цикл бина и возможное количество создаваемых бинов.**
+
+### Singleton
+
+**Scope, который используется по умолчанию**
+
+```xml
+<bean id="musicBean"
+      class="us.ossowitz.springcourse.MusicPlayer">
+</bean>
+```
+
+• По умолчанию создаётся объект (он создаётся до вызова метода getBean()). <br/>
+• При всех вызовах getBean() возвращается ссылка на один и тот же единственный объект. <br/>
+• Подходит для stateless-объектов (объекты, состояние
+которых нам менять не приходится. Потому что если мы будем изменять состояние
+у Singleton бина, столкнёмся с проблемой).
+
+### Prototype
+
+**Scope, который каждый раз создаёт новый объект при вызове getBean()**
+
+• Такой бин создаётся только после обращения к Spring Container-у 
+с помощью метода getBean(). <br/>
+• Для каждого такого обращения создаётся новый бин в Spring Container. <br/>
+• Чаще всего используется тогда, когда у нашего бина есть изменяемые состояния (stateful). <br/>
+
+## Жизненный цикл бина (Bean lifecycle)
+
+![img.png](img.png)
+
+### init-method & destroy-method
+
+#### init-method
+• Метод, который запускается в ходе инициализации бина. <br/>
+• Инициализация ресурсов, обращение к внешним файлам, запуск БД.
+
+#### destroy-method
+• Метод, который запускается в ходе уничтожения бина (при 
+завершении работы приложения). <br/>
+• Очищение ресурсов, закрытие потоков ввода-вывода,
+закрытие доступа к БД.
