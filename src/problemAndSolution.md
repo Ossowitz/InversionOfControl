@@ -413,6 +413,37 @@ Spring отдаёт prototype бины клиенту и больше о них 
 
 ### Пример создания без аргументов:
 
+Мы можем создать класс Foo, который предоставляет создаваемый bean-компонент:
+```java
+public class Foo{}
+```
+Затем мы создаём класс InstanceFactoryMethod, который включает фабричный метод *createInstance*, который создаёт наш bean-компонент Foo:
+```java
+public class InstanceFooFactory {
+
+   public Foo createInstance() {
+      return new Foo();
+   }
+}
+```
+После этого настраиваем Spring: <br/>
+1. Создайте bean-компонент для нашего фабричного класса (InstanceFooFactory). <br/>
+2. Используйте атрибут factory-bean для ссылки на наш factory-bean. <br/>
+3. Используйте атрибут factory-method для ссылки на наш заводской метод (createInstance).
+
+Применив это к конфигурации Spring XML, мы получим:
+```xml
+<beans ...>
+
+    <bean id="instanceFooFactory"
+      class="com.baeldung.factorymethod.InstanceFooFactory" />
+
+    <bean id="foo"
+      factory-bean="instanceFooFactory"
+      factory-method="createInstance" />
+
+</beans>
+```
 
 ## Аннотации
 
@@ -458,7 +489,7 @@ public class ClassicalMusic implements Music {
 ![img_1.png](img_1.png)
 
 #### Как работает аннотация @Autowired?
-*В данном примере в бин musicPlayer необходимо внедрить бин, который реализует интерфейс Music?
+*В данном примере в бин musicPlayer необходимо внедрить бин, который реализует интерфейс Music:
 
 ```java
 @Autowired
