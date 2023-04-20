@@ -474,7 +474,7 @@ public class ClassicalMusic implements Music {
     @Override
    public String getSong() {
         return "Hungarian Rhapsody";
-    }
+   }
 }
 ```
 
@@ -498,9 +498,101 @@ public MusicPLayer(Music music) {
 }
 ```
 
+В XML-файл:
+```xml
+<context:component-scan base-package="us.ossowitz.springcourse"/>
+```
+
 • **Spring сканирует все классы с аннотацией @Component и создаёт бины для этих классов. <br/>**
 • **Spring сканирует все созданные бины и проверяет, подходит ли хотя бы один бин
-в качестве зависимости там, где мы указывали аннотацию @Autowired** <br/>
+в качестве зависимости там, где мы указывали аннотацию @Autowired.** <br/>
 • Если находится один подходящий бин, он внедряется в качестве зависимости. <br/>
 • Если не находится ни одного бина - **ошибка**. <br/>
 • Если несколько бинов подходят - **неоднозначность**.
+
+## Аннотация @Value
+Для внедрения строк и других значений можно использовать аннотацию
+@Value. В этом случае в сеттерах нет необходимости, как это было при
+конфигурации с помощью XML-файла.
+
+```java
+@Value("${person.name}")
+private String personName;
+
+@Value("${person.age}")
+private int age;
+```
+
+## Аннотация @Qualifier
+
+Если при использовании @Autowired подходящих по типу бинов больше одного, то выбрасывается 
+исключение. Предотвратить выброс данного исключения можно конкретно указав, какой
+бин должен быть внедрён. Для этого используют аннотацию @Qualifier.
+
+![img_6.png](img_6.png)
+
+## Аннотация @Scope
+
+![img_2.png](img_2.png)
+
+**Как это будет выглядеть с помощью аннотации:**
+
+![img_3.png](img_3.png)
+
+## Аннотация @PostConstruct и @PreDestroy
+
+![img_4.png](img_4.png)
+
+**Пример из кода:**
+
+![img_5.png](img_5.png)
+
+*Эти аннотации являются частью Java EE. И поскольку Java EE устарела в 
+Java 9 и удалена в Java 11, необходимо добавить дополнительную зависимость
+для использования этих аннотаций:*
+
+```xml
+<dependency>
+    <groupId>javax.annotation</groupId>
+    <artifactId>javax.annotation-api</artifactId>
+    <version>1.3.2</version>
+</dependency>
+```
+
+## Конфигурация с помощью Java-кода.
+
+## Аннотация @Configuration
+Помечает Java класс, который мы хотим использовать для конфигурации Spring-приложения.
+
+```java
+@Configuration
+public class SpringConfig{
+}
+```
+
+Пустой конфигурационный Java-класс равен по функционалу пустому конфигурационному XML файлу:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+</beans>
+```
+
+## Для каждого XML тега есть соответсвующая аннотация:
+![img_7.png](img_7.png)
+
+![img_8.png](img_8.png)
+
+## Использование конфигурационного файла:
+
+![img_9.png](img_9.png)
+
+Ручное внедрение зависимостей (без @Autowired) с помощью Java-конфигурации:
+
+![img_10.png](img_10.png)
