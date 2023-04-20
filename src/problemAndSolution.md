@@ -584,7 +584,7 @@ public class SpringConfig{
 </beans>
 ```
 
-## Для каждого XML тега есть соответсвующая аннотация:
+## Для каждого XML тега есть соответствующая аннотация:
 ![img_7.png](img_7.png)
 
 ![img_8.png](img_8.png)
@@ -596,3 +596,31 @@ public class SpringConfig{
 Ручное внедрение зависимостей (без @Autowired) с помощью Java-конфигурации:
 
 ![img_10.png](img_10.png)
+
+## Аннотация @Bean
+
+```java
+@Configuration
+public class SpringConfig {
+    
+   @Bean
+   public ClassicalMusic musicBean() {
+        return new ClassicalMusic();
+   }
+   
+   @Bean
+   public MusicPlayer musicPlayer() {
+       return new MusicPlayer(musicBean());
+   }
+}
+```
+
+• Как и в случае с XML-конфигурацией, по умолчанию у бинов scope=singleton <br/>
+• Это значит, что тело @Bean методов по-умолчанию вызывается только один раз, 
+а все последующие вызовы Spring прерывает и возвращает уже имеющийся бин из 
+контекста.
+
+## Внедрение значений из внешнего файла:
+![img_11.png](img_11.png)
+
+![img_12.png](img_12.png)
