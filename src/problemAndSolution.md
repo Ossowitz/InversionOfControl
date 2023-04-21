@@ -6,7 +6,9 @@
  */
 ```
 
-# Inversion of Control (IoC)
+# Spring Core
+
+## Inversion of Control (IoC)
 
 ## Проблема #1:
 
@@ -624,3 +626,5 @@ public class SpringConfig {
 ![img_11.png](img_11.png)
 
 ![img_12.png](img_12.png)
+
+## Spring MVC
