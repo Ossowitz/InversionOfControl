@@ -628,3 +628,10 @@ public class SpringConfig {
 ![img_12.png](img_12.png)
 
 ## Spring MVC
+
+### Что такой Spring MVC?
+
+* Один из компонентов Spring Framework, который позволяет разрабатывать web-приложения на Java
+* Spring MVC предполагает разработку web-приложений с использованием архитектуры Model - View - Controller
+* Разрабатывая web-приложения с помощью Spring MVC, мы можем использовать всё, что даёт нам Spring Core - бины, DI и так далее.
+
