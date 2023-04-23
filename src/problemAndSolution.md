@@ -8,6 +8,8 @@
 
 # Spring Core
 
+*Spring Core - IoC, DI, Beans, Configuration (XML, Annotation and Java), Autowiring*
+
 ## Inversion of Control (IoC)
 
 ## Проблема #1:
@@ -586,7 +588,7 @@ public class SpringConfig{
 </beans>
 ```
 
-## Для каждого XML тега есть соответствующая аннотация:
+## Для каждого XML-тега есть соответствующая аннотация:
 ![img_7.png](img_7.png)
 
 ![img_8.png](img_8.png)
@@ -644,3 +646,4 @@ public class SpringConfig {
 * Model - логика работы с данными 
 * View - логика представления, интерфейс
 * Controller - логика навигации, обработка запросов
+
