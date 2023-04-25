@@ -704,7 +704,37 @@ public class SpringConfig {
 ## Тривиальное Spring-приложение, сконфигурированное с помощью XML-кода
 
 **web.xml** <br/>
-*Считывается сервером Apache Tomcat, конфигурирует DispatcherServlet.*
+*Считывается сервером Apache Tomcat, конфигурирует DispatcherServlet. <br/>*
+*web.xml - deployment descriptor (дескриптор развёртывания).*
+
+## Зачем нужен файл web.xml?
+
+Сервер (в нашем случае Apache Tomcat) считывает содержимое файла web.xml. В этом файле мы можем описать, что мы бы хотели, что бы сервер делал. В нашем случае, мы хотим, что бы сервер все HTTP-запросы от пользователей перенаправлял на DispatcherServlet. И когда запрос будет попадать сначала в сервер, потом в DispatcherServlet - этот запрос будет попадать в наше Spring MVC приложение.
+
+```xml
+<servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/applicationContextMVC.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+``` 
+Здесь, с помощью тега servlet мы создаём наш DispatcherServlet. 
+При его создании мы должны ему указать в качестве параметра путь до того файла, где находится Spring-конфигурация. 
+Параметр load-on-startup указывает на то, что DispatcherServlet нужно в первую очередь загружать в наш сервер.
+Далее, с помощью тега servlet-mapping мы обращаемся к нашему dispatcher и указываем, что любой url ("/" означает, что любой url), который пользователь введёт к браузере, 
+должен перенаправляться на наш DispatcherServlet. <br/>
+**DispatcherServlet перенаправит запрос от пользователя на правильный контроллер, который мы будем реализовывать.**
+
+### Итоговое представление web.xml:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -794,3 +824,147 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
 
 *Этот класс был представлен в Spring 3.2 и он реализует интерфейс WebApplicationInitializer за нас. Нам остаётся лишь подставить оставшиеся мелочи.*
 
+## Аннотация @EnableWebMvc
+
+@EnableWebMvc эквивалентен <mvc:annotation-driven/> в XML. Он включает поддержку @Controller-аннотированных классов, которые используются @RequestMapping для сопоставления входящих запросов с определенным методом.
+
+## Конфигурация с помощью Java-кода:
+
+*Вместо applicationContextMVC мы используем созданный класс SpringConfig:*
+
+*Конфигурация с помощью XML-файла:*
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd
+    	http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="us.ossowitz.springcourse"/>
+
+    <mvc:annotation-driven/>
+
+    <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".html"/>
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver"/>
+        <property name="enableSpringELCompiler" value="true"/>
+    </bean>
+
+    <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine"/>
+        <property name="order" value="1"/>
+        <property name="viewNames" value="*"/>
+    </bean>
+</beans>
+```
+
+*Конфигурация с помощью Java-кода:*
+```java
+package us.ossowitz.springcourse.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+@Configuration
+@ComponentScan("us.ossowitz.springcourse")
+@EnableWebMvc
+public class SpringConfig implements WebMvcConfigurer {
+    private final ApplicationContext applicationContext;
+
+    @Autowired
+    public SpringConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    @Bean
+    public SpringResourceTemplateResolver templateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setApplicationContext(applicationContext);
+        templateResolver.setPrefix("/WEB-INF/views/");
+        templateResolver.setSuffix(".html");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        templateEngine.setEnableSpringELCompiler(true);
+        return templateEngine;
+    }
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(templateEngine());
+        registry.viewResolver(resolver);
+    }
+}
+```
+
+*Также, как мы подставляли путь до applicationContextMVC.xml:*
+```xml
+<servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/applicationContextMVC.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+```
+
+*Мы должны подставить наш класс SpringConfig в метод класса MySpringMvcDispatcherServletInitializer:*
+```java
+package us.ossowitz.springcourse.config;
+
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class[0];
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{SpringConfig.class};
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[0];
+    }
+}
+```
+
+*А в методе getServletMappings() мы должны вернуть "/", как это делали в web.xml: *
+```xml
+<servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+```
+*Все http-запросы пользователя посылаем на DispatcherServlet*
