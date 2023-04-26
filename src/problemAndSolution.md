@@ -968,3 +968,15 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
     </servlet-mapping>
 ```
 *Все http-запросы пользователя посылаем на DispatcherServlet*
+
+## Контроллеры
+
+![img_15.png](img_15.png)
+
+### Аннотация @Controller
+
+• Помечает класс-контроллер. <br/>
+• Наследуется от аннотации @Component. <br/>
+• Поэтому, @ComponentScan работает с @Controller так же, как и просто с @Component. <br/>
+• @Controller - тот же @Component, но с дополнительными возможностями.
+
