@@ -730,7 +730,7 @@ public class SpringConfig {
 Здесь, с помощью тега servlet мы создаём наш DispatcherServlet. 
 При его создании мы должны ему указать в качестве параметра путь до того файла, где находится Spring-конфигурация. 
 Параметр load-on-startup указывает на то, что DispatcherServlet нужно в первую очередь загружать в наш сервер.
-Далее, с помощью тега servlet-mapping мы обращаемся к нашему dispatcher и указываем, что любой url ("/" означает, что любой url), который пользователь введёт к браузере, 
+Далее, с помощью тега servlet-mapping мы обращаемся к нашему dispatcher и указываем, что любой url ("/" означает, что любой url), который пользователь введёт в браузере, 
 должен перенаправляться на наш DispatcherServlet. <br/>
 **DispatcherServlet перенаправит запрос от пользователя на правильный контроллер, который мы будем реализовывать.**
 
@@ -791,7 +791,7 @@ public class SpringConfig {
         <property name="suffix" value=".html"/>
     </bean>
 
-    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+    <bean id="templateEngine" class="org.thymeleaf.spring6.SpringTemplateEngine">
         <property name="templateResolver" ref="templateResolver"/>
         <property name="enableSpringELCompiler" value="true"/>
     </bean>
@@ -806,7 +806,7 @@ public class SpringConfig {
 
 ## Чем заменить web.xml?
 
-*Начиная с 3 версии Spring Framework можно использовать Java-код вместо web.xml*
+*Начиная с 3 версии в Spring Framework можно использовать Java-код вместо web.xml.*
 
 **Для этого необходимо в проекте создать Java-класс, который реализует интерфейс org.springframework.web.WebApplicationInitializer.**
 
@@ -820,7 +820,7 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
 }
 ```
 
-**Но также существует абстрактный класс AbstractAnnotationConfigDispatcherServletInitializer**
+**Но также существует абстрактный класс AbstractAnnotationConfigDispatcherServletInitializer.**
 
 *Этот класс был представлен в Spring 3.2 и он реализует интерфейс WebApplicationInitializer за нас. Нам остаётся лишь подставить оставшиеся мелочи.*
 
@@ -955,7 +955,7 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 
     @Override
     protected String[] getServletMappings() {
-        return new String[0];
+        return new String[]{"/"};
     }
 }
 ```
@@ -967,7 +967,7 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 ```
-*Все http-запросы пользователя посылаем на DispatcherServlet*
+*Все http-запросы пользователя посылаем на DispatcherServlet.*
 
 ## Контроллеры
 
@@ -987,3 +987,20 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 • Обычно (но не всегда), методы возвращают строку(String) - название представления, которое надо показать пользователю. <br/>
 • У метода может быть любое название. <br/>
 
+### Маппинги
+
+![img_16.png](img_16.png)
+
+**Виды маппинга:**
+
+•@GetMapping <br/>
+•@PostMapping <br/>
+•@PutMapping <br/>
+•@DeleteMapping <br/>
+•@PatchMapping
+
+**Иногда пишут(устаревший вариант):** <br/>
+@RequestMapping(method=RequestMethod.GET)
+
+• Связывают метод контроллера с адресом, по которому можно к этому методу обратиться (из браузера, например). <br/>
+• Всего 5 разных видов маппинга - в зависимости от того, какой HTTP-запрос (с каким HTTP-методом) должен прийти в этот метод контроллера.
