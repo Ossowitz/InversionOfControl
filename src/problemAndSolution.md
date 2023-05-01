@@ -1004,3 +1004,45 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 
 • Связывают метод контроллера с адресом, по которому можно к этому методу обратиться (из браузера, например). <br/>
 • Всего 5 разных видов маппинга - в зависимости от того, какой HTTP-запрос (с каким HTTP-методом) должен прийти в этот метод контроллера.
+
+## Аннотация @RequestMapping на классе
+
+Эта аннотация может использоваться на методе (устаревший способ - лучше использовать новые аннотации):
+```java
+@RequestMapping(value = "/new", method = RequestMethod.GET)
+public String newPerson(Model model){
+    // some code
+} 
+```
+
+![img_17.png](img_17.png)
+
+**В этом случае URL-адреса всех методов будут обязательно иметь в себе /people в начале**
+
+## Параметры GET-запроса в Spring Framework
+
+*Можно получить двумя способами:*
+
+1. С помощью объекта HttpServletRequest:
+
+![img_18.png](img_18.png)
+
+![img_19.png](img_19.png)
+
+![img_20.png](img_20.png)
+
+2. С помощью Аннотации @RequestMapping
+
+![img_21.png](img_21.png)
+
+![img_22.png](img_22.png)
+
+![img_23.png](img_23.png)
+
+Такая конструкция позволяет выполнить запрос без параметров:
+
+![img_24.png](img_24.png)
+
+![img_25.png](img_25.png)
+
+![img_26.png](img_26.png)
