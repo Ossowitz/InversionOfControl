@@ -1065,6 +1065,6 @@ public String newPerson(Model model){
 
 ![img_30.png](img_30.png)
 
-Использование 
+Использование Thymeleaf для обращения к модели и динамического генерирования текста
 
 ![img_31.png](img_31.png)
