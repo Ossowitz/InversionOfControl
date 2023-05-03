@@ -1126,6 +1126,149 @@ public String newPerson(Model model){
 • В DAO классах обычно пишется SQL-код для работы с БД приложения (чтение, запись, обновление, удаление) <br/>
 • Есть другой паттерн взаимодействия с БД - репозиторий (англ. repository). Этот паттерн предоставляет большую абстракцию над БД, чем DAO.
 
-## Пример тривиального CRUD-приложения
+## Пример тривиального CRUD-приложения по отображению person: всего списка, а также по индексу.
 
 ![img_40.png](img_40.png)
+
+**Структура проекта:**
+
+![img_41.png](img_41.png)
+
+**Тело класса Person:**
+
+```java
+public class Person {
+    private int id;
+    private String name;
+
+    public Person(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+**Класс PersonDAO:**
+
+```java
+@Component
+public class PersonDAO {
+    private List<Person> people;
+    private static int PEOPLE_COUNT;
+
+    {
+        people = new ArrayList<>();
+
+        people.add(new Person(++PEOPLE_COUNT, "Tom"));
+        people.add(new Person(++PEOPLE_COUNT, "Bob"));
+        people.add(new Person(++PEOPLE_COUNT, "Mike"));
+        people.add(new Person(++PEOPLE_COUNT, "Katy"));
+    }
+
+    public List<Person> index() {
+        return people;
+    }
+
+    public Person show(int id) {
+        return people.stream().filter(person -> id == person.getId()).findAny().orElse(null);
+    }
+}
+```
+
+**Логика контроллера PersonDAO:**
+
+```java
+@Component
+public class PersonDAO {
+    private List<Person> people;
+    private static int PEOPLE_COUNT;
+
+    {
+        people = new ArrayList<>();
+
+        people.add(new Person(++PEOPLE_COUNT, "Tom"));
+        people.add(new Person(++PEOPLE_COUNT, "Bob"));
+        people.add(new Person(++PEOPLE_COUNT, "Mike"));
+        people.add(new Person(++PEOPLE_COUNT, "Katy"));
+    }
+
+    public List<Person> index() {
+        return people;
+    }
+
+    public Person show(int id) {
+        return people.stream().filter(person -> id == person.getId()).findAny().orElse(null);
+    }
+}
+```
+
+**Отображение index:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все люди</title>
+</head>
+<body>
+
+<div th:each="person : ${people}">
+    <a th:href="@{/people/{id}(id=${person.getId()})}" th:text="${person.getName()}">user</a>
+</div>
+
+</body>
+</html>
+```
+
+**Отображение show:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Человек</title>
+</head>
+<body>
+<p th:text="${person.getName()}">VALUE</p>
+<p th:text="${person.getId()}">VALUE</p>
+</body>
+</html>
+```
+
+**Пример исполнения программы:**
+
+**GET /PEOPLE** <br/>
+**GET /people/:id** <br/>
+
+![img_42.png](img_42.png)
+
+![img_43.png](img_43.png)
+
+![img_44.png](img_44.png)
+
+## Пример тривиального CRUD-приложения по добавлению person с помощью html-формы
+
+![img_45.png](img_45.png)
+
+**Пример исполнения программы:** 
+
+**GET /people/new** <br/>
+**POST /people**
