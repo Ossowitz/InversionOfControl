@@ -1268,6 +1268,153 @@ public class PersonDAO {
 
 ![img_45.png](img_45.png)
 
+## Разбор HTML-формы:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+
+<form method="POST" action="/people">
+    <label for="name">Name</label>
+    <input name="name" type="text" id="name"/>
+
+    <br/>
+
+    <label for="surname">Surname</label>
+    <input name="surname" type="text" id="surname"/>
+
+    <br/>
+
+    <label for="email">Email</label>
+    <input name="email" type="text" id="email"/>
+
+    <br/>
+
+    <input type="submit" value="Add Person"/>
+</form>
+
+</body>
+</html>
+```
+
+У формы есть атрибут - method, в котором указывается тот HTTP-метод, который будет использоваться при отправке формы. В атрибуте action пишется тот адрес, на который будут отправляться данные с этой формы.
+Тег input создаёт поле для ввода. Атрибут label помечает, какие данные необходимо ввести. Type "submit" тега input предоставляет возможность отправить даннные
+POST-запросом на адрес /people.
+
+**Отображение представления:**
+
+![img_46.png](img_46.png)
+
+**Тело POST-запроса на /people:** <br/>
+*name=ИМЯ&surname=ФАМИЛИЯ&email=EMAIL*
+
+**На контроллере:** <br/>
+
+```java
+@PostMapping
+    public String create(@RequestParam("name") String name,
+                         @RequestParam("surname") String surname,
+                         @RequestParam("email") String email,
+                         Model model) {
+        Person person = new Person();
+
+        person.setName(name);
+        person.setSurname(surname);
+        person.setEmail(email);
+
+        model.addAttribute("person", person);
+
+        return "successPage";
+    }
+```
+
+## HTML-формы в Thymeleaf
+
+**Контроллер:**
+
+```java
+@GetMapping("/new")
+public String newPerson(Model model) {
+    model.addAttribute("person", new Person());
+    return "people/new";
+}
+```
+
+**Представление:**
+
+```html
+<form th:method="POST" th:action="@{/people}" th:object="${person}">
+    <div>
+        <label for="name">Name</label>
+        <input type="text" th:field="*{name}" id="name"/>
+
+        <br/>
+
+        <label for="surname">Surname</label>
+        <input type="text" th:field="*{surname}" id="surname"/>
+
+        <br>
+
+        <label for="email">Email</label>
+        <input type="text" th:field="*{email}" id="email"/>
+
+        <br>
+
+        <input type="submit" value="Add Person"/>
+    </div>
+</form>
+```
+
+## Аннотация @ModelAttribute
+
+**Может аннотировать:**
+
+• Метод <br/>
+
+```java
+@ModelAttribute
+public String populateHeaderMessage() {
+    return "Welcome to our website!";
+}
+```
+**Когда аннотирует метод**
+
+В модель в каждом методе текущего контроллера добавляет ключ-значение. <br/>
+Используется для добавления тех пар ключ-значение, которые нужны во всех моделях этого контроллера. <br/>
+Любая модель из этого контроллера по умолчанию будет иметь значение с ключом headerMessage.
+
+![img_47.png](img_47.png)
+
+**Может добавлять в модель любой объект**
+
+```java
+public MeassageObject populateHeaderMeassage() {
+    MessagetObject messageObject = new MessagetObject();
+    messageObject.setSomeField("Hello!");
+    
+    return messageObject;
+}
+```
+
+*Любая модель из этого контроллера по умолчанию будет иметь значение с ключом messageObject.*
+
+• Аргумент метода <br/>
+
+```java
+@PostMapping
+public String create(@ModelAttribute("person") Person person) {
+    personDAO.save(person);
+    return "redirect:/people";
+}
+```
+
+![img_48.png](img_48.png)
+
 **Пример исполнения программы:** 
 
 **GET /people/new** <br/>
