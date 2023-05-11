@@ -2,7 +2,8 @@
 
 ```java
 /**
- * @// TODO: 14.04.2023  
+ * @// TODO: 14.04.2023
+ * Подтяни все картинки в папку /photo
  */
 ```
 
@@ -347,7 +348,7 @@ musicPlayer.volume=70
 
 ## Жизненный цикл бина (Bean lifecycle)
 
-![img.png](photo/img.png)
+![img.png](img_1a.png)
 
 ### init-method & destroy-method
 
@@ -1451,4 +1452,38 @@ public String create(@ModelAttribute("person") Person person) {
 **На стороне Spring-приложения - с помощью фильтра.**
 
 *Фильтр - объект, который перехватывает все входящие HTTP-запросы. В данном случае фильтр используется для того, чтобы смотреть на значение поля _method в поступающих HTTP-запросах (если это поле есть).*
+
+## Валидация форм
+
+*Отвалидировать данные можно с помощью **Hibernate Validator**, внедрив зависимость в pom.xml.*
+
+**Для того, что гарантировать наличие значения в графе, можно использовать аннотацию @NotEmpty**
+
+*Пример:*
+
+```java
+@NotEmpty(message = "Name should not be empty")
+@Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+private String name;
+
+@Min(value = 0, message = "Age should be greater than 0")
+private int age;
+
+@NotEmpty(message = "Email should not be empty")
+@Email(message = "Email should be valid")
+private String email;
+```
+
+### Аннотация @Valid
+*Аннотация используется на модели и позволяет на этапе внедрения значений из формы в объект проверять валидность значений.*
+
+*И если какие-то условия нарушаются, то у нас появляется ошибка, которая помещается в отдельный объект.*
+
+*Для этого используется объект класса BindingResult. Важно то, что он должен идти после той модели, которая валидируется / после того объекта, у которого стоит аннотация @Valid.*
+
+*Пример валидации в самом контроллере:*
+
+![img_54.png](img_54.png)
+
+В случае обнаружения ошибок, будет возвращаться форма **/people/new**, но уже с ошибками.
 
