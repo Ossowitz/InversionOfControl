@@ -1487,3 +1487,69 @@ private String email;
 
 В случае обнаружения ошибок, будет возвращаться форма **/people/new**, но уже с ошибками.
 
+## Причина использования баз данных
+
+[Краткое руководство по SQL](https://github.com/Ossowitz/SQL)
+
+### Проблема
+
+*В случае использования альтернатив баз данных, при перезапуске приложения мы теряем сохранённые данные. Необходимо хранить данные на жёстком диске, а не в оперативной памяти.*
+
+**Варианты связывания Java-приложения с базой данных:**
+
+![img_55.png](img_55.png)
+
+### Связь Java-приложения с БД
+
+• JDBC API - самый низкоуровневый (сами делаем все запросы к БД и сами переводим Java-объекты в строки таблицы и наоборот). <br/>
+• JdbcTemplate - тонкая обёртка вокруг JDBC API. Часть Spring Framework. Предоставляет некоторые абстракции, берёт часть дел на себя. <br/>
+• Hibernate - самый высокий уровень абстракции. Практически не пишем вручную запросы
+к БД. Автоматически переводит Java-объекты в стоки таблицы и наоборот. Может
+автоматически создавать таблицы в БД на основании наших Java-классов. Этот функционал
+называется ORM (Object Relational Mapping).
+
+## Как подключиться к БД?
+
+1. Запускаем БД (локально или удалённо).
+2. У работающей БД есть свой адрес (как и у сервера, localhost:8080/hello-world). <br/>
+**Адрес БД:** url=jdbc:postgresql://localhost:5432/db_name <br/>
+username=postgres <br/>
+password=
+3. Используем JDBC-драйвер, чтобы подключиться к БД с указанным адресом.
+4. Можем делать запросы к БД из Java-приложения.
+
+### Замена временного хранилища данных на базу данных
+
+![img_56.png](img_56.png)
+
+1. Для подключения возможности использования базы данных, необходимо внедрить PostgreSQL JDBC Driver в *pom.xml*:
+```xml
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.6.0</version>
+</dependency>
+```
+
+2. Для соединения с БД необходимо использовать класс **Connection** пакета java.sql.
+
+```java
+private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
+private static final String USERNAME = "postgres";
+private static final String PASSWORD = "postgres";
+
+private static Connection connection;
+```
+
+3. Прежде чем подключиться к базе данных, необходимо загрузить драйвер:
+
+```java
+Class.forName("org.postgresql.Driver");
+```
+
+4. Для установления соединения с базой данных используется вызов метода **getConnection** класса DriverManager.
+
+```java
+connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+```
+
