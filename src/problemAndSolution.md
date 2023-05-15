@@ -1626,6 +1626,29 @@ String SQL = "INSERT INTO spring_db.person VALUES(" + 1 + ",'" + person.getName(
 
 **Если в качестве email'а в форме мы введём строку:** <br/>
 ```
-test@mail.ru'); DROP TABLE person; --
+test@mail.ru'); DROP TABLE spring_db.person; --
 ```
 
+## PreparedStatement
+
+*То, что должно использоваться в JDBC API для всех запросов, где содержатся данные, полученные от пользователя.*
+
+```java
+String SQL = "INSERT INTO spring_db.person VALUES(1, ?, ?, ?)";
+PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+
+preparedStatement.setString(1, person.getName());
+preparedStatement.setInt(2, person.getAge());
+preparedStatement.setString(3, person.getEmail());
+
+preparedStatement.executeUpdate();
+```
+
+**SQL-запрос компилируется один раз и не может быть изменён. Данные от пользователя могут быть вставлены лишь в указанные места запроса и не могут изменить сам SQL-запрос.**
+
+Если в качестве email'а в форме мы введём строку:
+*test@mail.ru'); DROP TABLE spring_db.person; --*
+
+Эта строка будет просто помещена в БД. Какие бы кавычки мы не использовали в email'е, он всегда будет восприниматься как строка (не сможем выйти за пределы строки).
+
+![img_57.png](img_57.png)
