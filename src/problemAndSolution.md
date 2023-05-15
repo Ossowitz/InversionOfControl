@@ -1553,3 +1553,79 @@ Class.forName("org.postgresql.Driver");
 connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 ```
 
+5. Класс Statement используется для выполнения SQL-запросов. Объект этого класса является как бы контейнером для выполнения SQL-выражений через установленное соединение.
+
+*После установления соединения Connection с базой данных, оно может использоваться для выполнения SQL-запросов. Объект Statement создается методом Connection.createStatement.*
+
+*Для отправки серверу БД SQL-выражения для выполнения необходимо вызвать метод **executeQuery** объекта **Statement** и в качестве запроса передать скрипт запроса.*
+
+```java
+Statement statement = connection.createStatement();
+String SQL = "SELECT * FROM spring_db.person";
+```
+
+6. Из SQL-запроса возвращаются строки таблицы. Их можно принять с помощью объекта класса ResultSet.
+
+```java
+ResultSet resultSet = statement.executeQuery(SQL);
+```
+
+7. После получения построчного доступа к результатам запроса, можно проитерироваться по объекту resultSet и поместить данные в Java-объекты. <br/>
+**executeQuery() необходим именно для получения данных.**
+
+```java
+while (resultSet.next()) {
+    Person person = new Person();
+
+    person.setId(resultSet.getInt("id"));
+    person.setName(resultSet.getString("name"));
+    person.setEmail(resultSet.getString("email"));
+    person.setAge(resultSet.getInt("age"));
+
+    people.add(person);
+}
+```
+
+8. Для сохранения данных используется метод executeUpdate()
+
+```java
+try {
+    Statement statement = connection.createStatement();
+    String SQL = "INSERT INTO spring_db.person VALUES(" + 1 + ",'" + person.getName() + "'," + person.getAge()
+        + ",'" + person.getEmail() + "')";
+    statement.executeUpdate(SQL);
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+```
+
+## Составление SQL-запроса вручную
+
+```java
+Statement statement = connection.createStatement();
+String SQL = "INSERT INTO spring_db.person VALUES(" + 1 + ",'" + person.getName() + "'," + person.getAge()
+        + ",'" + person.getEmail() + "')";
+statement.executeUpdate(SQL);
+```
+
+**Однако, это:**
+1. Неудобно
+2. Легко допустить ошибку
+3. Угроза SQL-инъекции
+
+## SQL-инъекция
+
+*Один из самых распространённых способов взлома сайтов и программ, работающих с базами данных.*
+
+```java
+String SQL = "INSERT INTO spring_db.person VALUES(" + 1 + ",'" + person.getName() + "'," + person.getAge()
+    + ",'" + person.getEmail() + "')";
+```
+
+Так как строки из HTML-формы напрямую конкатенируются в SQL-запросе, злоумышленник может подобрать такую строку, которая нанесёт вред.
+
+**Если в качестве email'а в форме мы введём строку:** <br/>
+```
+test@mail.ru'); DROP TABLE person; --
+```
+
