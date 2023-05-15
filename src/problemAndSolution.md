@@ -1652,3 +1652,12 @@ preparedStatement.executeUpdate();
 Эта строка будет просто помещена в БД. Какие бы кавычки мы не использовали в email'е, он всегда будет восприниматься как строка (не сможем выйти за пределы строки).
 
 ![img_57.png](img_57.png)
+
+### Сравнение скорости PreparedStatement с Statement
+
+![img_58.png](img_58.png)
+
+• PreparedStatement - SQL-запрос компилируется один раз. <br/>
+• Statement - SQL-запрос компилируется каждый раз. <br/>
+PreparedStatement может ещё кэшироваться на самой БД.
+
