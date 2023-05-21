@@ -1954,8 +1954,7 @@ public class PersonValidator implements Validator {
 
 В методе **validate()** мы хотим посмотреть, есть ли человек с таким email'ом в БД.
 
-**В PersonDAO необходимо реализовать метод show(), который будет осуществлять поиск человека с введённым email'ом в БД:
-**
+**В PersonDAO необходимо реализовать метод show(), который будет осуществлять поиск человека с введённым email'ом в БД:**
 
 ```java
 public Optional<Person> show(String email){
@@ -1963,3 +1962,7 @@ public Optional<Person> show(String email){
         new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
 }
 ```
+
+**Результат после добавления Spring Validator:**
+
+![img_74.png](img_74.png)
