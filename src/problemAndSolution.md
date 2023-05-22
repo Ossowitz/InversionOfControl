@@ -1966,3 +1966,5 @@ public Optional<Person> show(String email){
 **Результат после добавления Spring Validator:**
 
 ![img_74.png](img_74.png)
+
+## Валидация паттернов
