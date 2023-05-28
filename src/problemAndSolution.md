@@ -1970,3 +1970,12 @@ public Optional<Person> show(String email){
 ## Валидация паттернов. Аннотация @Pattern
 
 *Аннотация @Pattern позволяет нам проверить, что строка соответствует определённому паттерну. Эти паттерны задаются с помощью регулярных выражений.*
+
+*Пример использования:*
+
+```java
+// Страна, Город, Индекс (6 цифр)
+// Страна, Город, Индекс (6 цифр)
+@Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, \\d{6}", message = "Your address should be in this format: Country, City, Postal Code (6 digits)")
+private String address;
+```
