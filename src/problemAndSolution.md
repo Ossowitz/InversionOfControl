@@ -110,7 +110,6 @@ class MusicPlayer {
 • Бины создаются из Java-классов (так же, как и обычные объекты).
 
 ```xml
-
 <bean>id="testBean"
     class="us.ossowitz.springcourse.TestBean">
     <constructor-arg value="Ilya"/>
@@ -239,7 +238,6 @@ class UseMusicPlayer {
 ### Внедрение (Injection) с помощью конструктора
 
 ```xml
-
 <bean id="musicBean"
       class="us.ossowitz.springcourse.ClassicalMusic">
 </bean>
@@ -254,19 +252,18 @@ class UseMusicPlayer {
 
 ```java
 MusicPlayer musicPlayer=context.getBean("musicPlayer",MusicPlayer.class);
-        musicPlayer.playMusic();
+musicPlayer.playMusic();
 ```
 
 ### Внедрение зависимостей через setter
 
 ```java
 public void setMusic(Music music){
-        this.music=music;
-        }
+    this.music=music;
+}
 ```
 
 ```xml
-
 <bean id="musicPlayer"
       class="us.ossowitz.springcourse.MusicPlayer">
     <property name="music" ref="musicBean"/>
@@ -280,16 +277,15 @@ private String name;
 private int volume;
 
 public void setName(String name){
-        this.name=name;
-        }
+    this.name=name;
+}
 
 public void setVolume(int volume){
-        this.volume=volume;
-        }
+    this.volume=volume;
+}
 ```
 
 ```xml
-
 <property name="name" value="Some name"/>
 <property name="volume" value="50"/>
 ```
@@ -310,14 +306,12 @@ musicPlayer.volume=70
 2. В applicationContext.xml подтягиваем путь до файла musicPlayer.properties: <br/>
 
 ```xml
-
 <context:property-placeholder location="classpath:musicPlayer.properties"/>
 ```
 
 3. Внедряем зависимости: <br/>
 
 ```xml
-
 <property name="name" value="${musicPlayer.name}"/>
 <property name="volume" value="${musicPlayer.volume}"/>
 ```
@@ -332,7 +326,6 @@ musicPlayer.volume=70
 **Scope, который используется по умолчанию**
 
 ```xml
-
 <bean id="musicBean"
       class="us.ossowitz.springcourse.MusicPlayer">
 </bean>
