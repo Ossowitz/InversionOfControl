@@ -367,7 +367,6 @@ musicPlayer.volume=70
 ### В коде:
 
 ```xml
-
 <bean id="musicBean"
       class="us.ossowitz.springcourse.ClassicalMusic"
       init-method="doMyInit"
@@ -379,12 +378,12 @@ musicPlayer.volume=70
 
 ```java
 public void doMyInit(){
-        System.out.println("Do my initialization");
-        }
+    System.out.println("Do my initialization");
+}
 
 public void doMyDestroy(){
-        System.out.println("Do my destruction");
-        }
+    System.out.println("Do my destruction");
+}
 ```
 
 ### Тонкости работы с init и destroy методов:
