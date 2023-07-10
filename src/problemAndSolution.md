@@ -1995,3 +1995,10 @@ private String address;
 - Thymeleaf поймёт, какого из людей мы выбрали по указанному значению th:value (потому что мы это указали в th:field)
 - В принимающем методе контроллера мы используем аннотацию @ModelAttribute и получаем выбранного человека
 
+# Spring Boot
+
+## Проблемы Spring Framework
+
+![img_78.png](img_78.png)
+
+## Spring Boot решает эти проблемы
