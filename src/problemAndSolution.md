@@ -2024,3 +2024,10 @@ private String address;
 *Spring Boot предоставляет встроенный Web-сервер*
 
 ![img_81.png](img_81.png)
+
+### Зависимости и их совместимость
+
+*Spring Boot Starters*
+
+![img_82.png](img_82.png)
+
