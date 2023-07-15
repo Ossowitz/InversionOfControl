@@ -2196,3 +2196,27 @@ h(x) = y
 ### Как будет работать приложение
 
 ![img_101.png](img_101.png)
+
+## CSRF (Cross-Site Request Forgery)
+*Межсайтовая Подделка Запроса*
+
+### Cookies same-origin policy
+
+![img_102.png](img_102.png)
+
+![img_103.png](img_103.png)
+
+![img_104.png](img_104.png)
+
+![img_105.png](img_105.png)
+
+### CSRF на примере
+
+![img_106.png](img_106.png)
+
+![img_107.png](img_107.png)
+
+![img_108.png](img_108.png)
+
+![img_109.png](img_109.png)
+
