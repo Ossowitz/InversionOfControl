@@ -2282,3 +2282,13 @@ h(x) = y
 ## Микросервисы
 
 ![img_117.png](img_117.png)
+
+# Конвертация между JSON И Java-объектами
+## Библиотека Jackson
+
+![img_118.png](img_118.png)
+
+### Jackson
+
+![img_119.png](img_119.png)
+
